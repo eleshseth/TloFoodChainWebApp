@@ -1,0 +1,16 @@
+# Node.js
+node_modules/
+dist/
+.env
+
+# Logs
+logs/
+*.log
+
+# Build files
+build/
+.DS_Store
+
+# Ignore editor-specific files
+.vscode/
+.idea/
