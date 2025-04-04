@@ -39,7 +39,7 @@ const Orders = ({ url }) => {
   const statusHandler = async (event, orderId) => {
     try {
       const response = await axios.post(
-        'http://localhost:8003/api/order/update-order-status',
+        'https://api.tlofoodchain.com/api/order/update-order-status',
         {
           orderId: orderId, // Use orderId instead of _id
           status: event.target.value,
@@ -57,7 +57,7 @@ const Orders = ({ url }) => {
   const storeHandler = async (event, orderId) => {
     try {
       const response = await axios.post(
-        'http://localhost:8003/api/order/update-Store-status',
+        'https://api.tlofoodchain.com/api/order/update-Store-status',
         {
           orderId: orderId, // Use orderId instead of _id
           store: event.target.value,
