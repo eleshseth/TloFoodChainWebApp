@@ -10,7 +10,7 @@ const Orders = ({ url }) => {
   const fetchAllIOrder = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:8003/api/order/admin-orders'
+        'https://api.tlofoodchain.com/api/order/admin-orders'
       );
       if (response.data.success) {
         setOrders(response.data.data);
@@ -86,9 +86,9 @@ const Orders = ({ url }) => {
             <div key={index} className='order-item'>
               <div className='order-images'>
                 {order.items.map((item, idx) => (
-                  <img 
+                  <img
                     key={idx}
-                    src={item.image} 
+                    src={item.image}
                     alt={item.name}
                     className='order-food-image'
                     onError={(e) => {

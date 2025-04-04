@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Orders from './pages/Orders/orders';
 
 function App() {
-  const url = 'http://69.62.74.60:8003';
+  const url = 'https://api.tlofoodchain.com';
   return (
     <>
       <div>
