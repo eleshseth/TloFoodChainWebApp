@@ -9,7 +9,7 @@ const Orders = ({ url }) => {
 
   const fetchAllIOrder = async () => {
     try {
-      const response = await axios.get(` ${url}/api/order/admin-orders`);
+      const response = await axios.get(`${url}/api/order/admin-orders`);
       if (response.data.success) {
         setOrders(response.data.data);
         console.log(response.data.data);
