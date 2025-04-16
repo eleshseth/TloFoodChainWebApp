@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './loginPopup.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
 
 const LoginPopup = ({ setShowLogin }) => {
+  const navigate = useNavigate();
   const { url, setToken, setUserData } = useContext(StoreContext);
 
   const [currState, setCurrState] = useState('Login');
   const [data, setData] = useState({
     name: '',
     email: '',
-    mobile: '',  // Added mobile field
+    mobile: '', // Added mobile field
     password: '',
   });
 
@@ -46,6 +48,11 @@ const LoginPopup = ({ setShowLogin }) => {
   useEffect(() => {
     console.log(data);
   }, [data]);
+  const handleForgotPassword = () => {
+    setShowLogin(false);
+    navigate('/forgot-password');
+  };
+
   return (
     <div className='login-popup'>
       <form onSubmit={onLogin} className='login-popup-container'>
@@ -112,6 +119,11 @@ const LoginPopup = ({ setShowLogin }) => {
           <input type='checkbox' required />
           <p>By Continuing, I agree to the terms and conditions</p>
         </div>
+        {currState === 'Login' && (
+          <p className="forgot-password">
+            Forgot Password? <span onClick={handleForgotPassword}>Click here</span>
+          </p>
+        )}
         {currState === 'Login' ? (
           <p>
             Create a new Account ?{' '}

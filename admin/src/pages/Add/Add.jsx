@@ -7,28 +7,26 @@ const Add = ({ url }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const [unit, setUnit] = useState('/pc');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('price', price);
-      formData.append('category', category);
-      formData.append('description', description);
-      formData.append('image', image);
+    const formData = new FormData();
+    formData.append('name', name + ` (${unit})`);
+    formData.append('price', price);
+    formData.append('category', category);
+    formData.append('image', image);
 
+    try {
       const response = await axios.post(`${url}/api/food/add`, formData);
       if (response.data.success) {
         toast.success('Food item added successfully');
-        // Reset form
         setName('');
         setPrice('');
         setCategory('');
-        setDescription('');
         setImage(null);
+        setUnit('');
       } else {
         toast.error('Failed to add food item');
       }
@@ -62,6 +60,18 @@ const Add = ({ url }) => {
           />
         </div>
 
+        {/* Unit selection field */}
+        <div className='form-group'>
+          <label>Unit</label>
+          <select
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+            required>
+            <option value='/pc'>/pc</option>
+            <option value='/kg'>/kg</option>
+          </select>
+        </div>
+
         <div className='form-group'>
           <label>Category:</label>
           <select
@@ -76,15 +86,6 @@ const Add = ({ url }) => {
             <option value='Chineese'>Chineese</option>
             <option value='Popcorn'>Popcorn</option>
           </select>
-        </div>
-
-        <div className='form-group'>
-          <label>Description:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
         </div>
 
         <div className='form-group'>

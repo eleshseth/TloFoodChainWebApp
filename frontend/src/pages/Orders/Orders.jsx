@@ -1,12 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './Orders.css';
 import { StoreContext } from '../../context/StoreContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import parcel_icon from '../../assets/parcel_icon.png';
 
 const Orders = () => {
-  const { url, token, userData } = useContext(StoreContext);
+  const { url, token, userData, setToken, setUserData } = useContext(StoreContext);
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check for stored token and userData
+    const storedToken = localStorage.getItem('token');
+    const storedUserData = localStorage.getItem('userData');
+
+    if (storedToken && storedUserData) {
+      setToken(storedToken);
+      setUserData(JSON.parse(storedUserData));
+    } else {
+      navigate('/');
+    }
+  }, []);
 
   const fetchOrders = async () => {
     try {
@@ -45,9 +60,9 @@ const Orders = () => {
                     <div className='item-details'>
                       <h4>{item.name}</h4>
                       <div className="item-info">
-                        <p>Quantity: {item.quantity}</p>
-                        <p>Price: ₹{item.price}</p>
-                        <p className="item-subtotal">Subtotal: ₹{item.price * item.quantity}</p>
+                        <p>Qty: {item.quantity}</p>
+                        <p>₹{item.price}/item</p>
+                        <p className="item-subtotal">Total: ₹{item.price * item.quantity}</p>
                       </div>
                     </div>
                   </div>

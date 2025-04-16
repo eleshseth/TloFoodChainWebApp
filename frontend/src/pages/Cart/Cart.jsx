@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import './Cart.css';
 import { StoreContext } from '../../context/StoreContext';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { assets } from '../../assets/assets';
 
 const Cart = ({ setShowLogin }) => {
   const { url } = useContext(StoreContext);
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount } = useContext(StoreContext);
+  const { cartItems, food_list, removeFromCart, addToCart, getTotalCartAmount } = useContext(StoreContext);
   const navigate = useNavigate();
   const { token } = useContext(StoreContext);
 
@@ -37,7 +38,21 @@ const Cart = ({ setShowLogin }) => {
                   />
                   <p>{item.name}</p>
                   <p>₹{item.price}</p>
-                  <p>{cartItems[item._id]}</p>
+                  <div className='quantity-controls'>
+                    <img 
+                      src={assets.remove_icon_red} 
+                      alt="-" 
+                      onClick={() => removeFromCart(item._id)}
+                      className='quantity-btn'
+                    />
+                    <p>{cartItems[item._id]}</p>
+                    <img 
+                      src={assets.add_icon_green} 
+                      alt="+" 
+                      onClick={() => addToCart(item._id)}
+                      className='quantity-btn'
+                    />
+                  </div>
                   <p>₹{item.price * cartItems[item._id]}</p>
                   <p onClick={() => removeFromCart(item._id)} className='cross'>X</p>
                 </div>

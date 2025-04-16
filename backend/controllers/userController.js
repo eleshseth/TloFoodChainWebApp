@@ -2,6 +2,7 @@ import userModel from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
+import nodemailer from 'nodemailer';
 
 //Login user
 
@@ -111,4 +112,90 @@ const checkAuthentication = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, checkAuthentication };
+
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: 'User does not exist' });
+    }
+
+    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    // Updated Gmail configuration
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS // This should be your App Password
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset - TLO Food Chain',
+      html: `
+        <h2>Password Reset Request</h2>
+        <p>Click the link below to reset your password:</p>
+        <a href="${process.env.FRONTEND_URL}/reset-password/${resetToken}">Reset Password</a>
+        <p>This link will expire in 1 hour.</p>
+        <p>If you didn't request this, please ignore this email.</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.json({ 
+      success: true, 
+      message: 'Password reset link sent to your email' 
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.json({ 
+      success: false, 
+      message: 'Error sending reset email',
+      error: error.message 
+    });
+  }
+};
+
+// Make sure to export the forgotPassword function
+export { loginUser, registerUser, checkAuthentication, forgotPassword, resetPassword };
+
+const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await userModel.findById(decoded.id);
+
+    if (!user) {
+      return res.json({ success: false, message: 'Invalid reset token' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update password
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ 
+      success: true, 
+      message: 'Password reset successful' 
+    });
+
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.json({ 
+      success: false, 
+      message: 'Error resetting password' 
+    });
+  }
+};

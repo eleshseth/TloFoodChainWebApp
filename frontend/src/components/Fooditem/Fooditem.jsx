@@ -4,7 +4,7 @@ import { assets } from '../../assets/assets';
 import { useState } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 
-const Fooditem = ({ id, name, price, description, image }) => {
+const Fooditem = ({ id, name, price, image }) => {
   const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
   const [imgError, setImgError] = useState(false);
 
@@ -12,9 +12,9 @@ const Fooditem = ({ id, name, price, description, image }) => {
     <div className='main-container'>
       <div className='food-item'>
         <div className='food-item-img-container'>
-          <img 
-            className='food-item-image' 
-            src={imgError ? assets.food_1 : image} 
+          <img
+            className='food-item-image'
+            src={imgError ? assets.food_1 : image}
             alt={name}
             onError={() => setImgError(true)}
           />
@@ -47,8 +47,11 @@ const Fooditem = ({ id, name, price, description, image }) => {
           <p>{name}</p>
         </div>
       </div>
-      <p className='food-item-desc'>{description}</p>
-      <p className='food-item-price'>{price}<b> ₹</b></p>
+      <p className='food-item-price'>
+        <b>₹</b>
+        {price}
+        <span className="unit-text">{name.includes('kg') ? '/kg' : '/pc'}</span>
+      </p>
     </div>
   );
 };

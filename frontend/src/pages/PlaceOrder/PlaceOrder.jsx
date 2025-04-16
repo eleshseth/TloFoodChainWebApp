@@ -1,11 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './PlaceOrder.css';
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const PlaceOrder = () => {
-  const { getTotalCartAmount, token, food_list, cartItems, url } =
-    useContext(StoreContext);
+  const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems } = useContext(StoreContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
 
   const [data, setData] = useState({
     firstName: '',
@@ -72,18 +79,17 @@ const PlaceOrder = () => {
               const verifyRes = await axios.post(
                 `${url}/api/order/verify`,
                 { response },
-                { headers: { token } }
+                { headers: { token: localStorage.getItem('token') } }
               );
               if (verifyRes.data.success) {
-                // alert('Payment successful!');
-                // Redirect to orders page instead of home
-                window.location.replace('/orders');
+                setCartItems({}); // Clear cart after successful payment
+                navigate('/orders');
               } else {
-                // alert('Payment verification failed!');
+                toast.error('Payment verification failed!');
               }
             } catch (err) {
               console.error('Error verifying payment:', err);
-              // alert('Payment verification error!');
+              toast.error('Payment verification error!');
             }
           },
           prefill: {
@@ -155,13 +161,14 @@ const PlaceOrder = () => {
         `${url}/api/order/place-cod`,
         orderData,
         {
-          headers: { token },
+          headers: { token: localStorage.getItem('token') }
         }
       );
 
       if (response.data.success) {
+        setCartItems({}); // Clear cart after successful COD order
         alert('Order placed successfully!');
-        window.location.replace('/orders');
+        navigate('/orders');
       } else {
         alert('Error placing order');
       }
@@ -276,7 +283,7 @@ const PlaceOrder = () => {
             <p>₹{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 50}</p>
           </div>
           <hr />
-          {/* <button type='submit'>PROCEED TO PAYMENT</button> */}
+           <button type='submit'>PROCEED TO PAYMENT</button> 
           <button onClick={handleCodOrder}>PROCEED VIA COD</button>
         </div>
       </div>

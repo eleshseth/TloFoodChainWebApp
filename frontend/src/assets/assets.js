@@ -66,7 +66,16 @@ import header_img_3 from './header_img (3).jpg';
 import header_img_4 from './header_img (4).jpg';
 import header_img_5 from './header_img (5).jpg';
 import origano from './origano.jpg';
-
+import popcorn from './popcorn.jpg';
+import blog2 from './blog2.jpg'; // Fixed import name
+import instagram from './instagram.png';
+import facebook from './facebook.png';
+import twitter from './twitter.png';
+import mobile from './mobile.png';
+import email from './email.png';
+import location from './location.png';
+import blog1 from './blog1.jpg'; // Fixed import name
+import menu from './menu.png';
 
 export const assets = {
   logo,
@@ -94,7 +103,17 @@ export const assets = {
   header_img_3,
   header_img_4,
   header_img_5,
-  origano
+  origano,
+  popcorn,
+  blog2,
+  instagram,
+  facebook, // Fixed export name,
+  twitter, // Fixed export name
+  mobile,
+menu,
+  email,
+  location,
+  blog1,
 };
 
 export const menu_list = [
@@ -121,7 +140,7 @@ export const menu_list = [
   },
   {
     menu_name: 'Popcorn',
-    menu_image: menu_5,
+    menu_image: popcorn,
   },
   {
     menu_name: 'Pure Veg',

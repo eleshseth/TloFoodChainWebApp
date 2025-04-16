@@ -19,16 +19,19 @@ const StoreContextProvider = (props) => {
       if (storedToken) {
         const response = await axios.get(`${url}/api/user/check-auth`, {
           headers: {
-            Authorization: `Bearer ${storedToken}`,
+            token: storedToken, // Changed from Authorization: Bearer format
           },
         });
         if (response.data.success) {
           setToken(storedToken);
           setUserData(response.data.data);
+          await loadCartData(storedToken); // Load cart data after successful auth
         }
       }
     } catch (error) {
+      console.error('Auth check failed:', error);
       localStorage.removeItem('token');
+      localStorage.removeItem('userData');
       setToken('');
       setUserData(null);
     }

@@ -1,0 +1,38 @@
+.privacy-container {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.privacy-content {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.privacy-content h1 {
+  color: #e23926;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+.privacy-text {
+  color: #333;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .privacy-container {
+    margin: 40px auto;
+  }
+  
+  .privacy-content {
+    padding: 20px;
+  }
+  
+  .privacy-content h1 {
+    font-size: 24px;
+  }
+}

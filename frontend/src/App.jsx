@@ -4,20 +4,33 @@ import { Navigate, Route, Routes, BrowserRouter } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Cart from './pages/Cart/Cart';
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder';
-import Footer from './components/Footer/Footer';
-import LoginPopup from '../src/components/LoginPopup/LoginPopup';
+
+//import LoginPopup from '../src/components/LoginPopup/LoginPopup';
 import { StoreContext } from './context/StoreContext';
 import Orders from './pages/Orders/Orders.jsx';
 import Blog from './pages/Blog/Blog.jsx';
+import Contact from './components/Contact/Contact';
+import Terms from './pages/Terms/Terms';
+import Footer from './components/Footer/footer.jsx';
+import Privacy from './pages/Privacy/Privacy';
+import Shipping from './pages/Shipping/Shipping.jsx';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
-  const { token } = useContext(StoreContext);
-  // useEffect(() => {
-  //   if (!token) {
-  //     setShowLogin(true);
-  //   }
-  // }, [token]);
+  const { token, setToken, setUserData } = useContext(StoreContext);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUserData = localStorage.getItem('userData');
+    
+    if (storedToken && storedUserData) {
+      setToken(storedToken);
+      setUserData(JSON.parse(storedUserData));
+    }
+  }, []);
+
   return (
     <>
       <div className='app'>
@@ -33,6 +46,13 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder />} />
           <Route path='/orders' element={<Orders />} />
           <Route path='/blog' element={<Blog />} />
+          <Route path='/blog/:title' element={<Blog />} />
+          <Route path='/contact' element={<Contact />} /> {/* Add this line */}
+          <Route path='/terms' element={<Terms />} />
+          <Route path='/privacy-policy' element={<Privacy />} />
+          <Route path='/shipping-policy' element={<Shipping />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/reset-password/:token' element={<ResetPassword />} /> {/* Add this line */}
         </Routes>
       </div>
       <Footer />
