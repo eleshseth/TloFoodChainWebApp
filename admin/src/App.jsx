@@ -1,31 +1,50 @@
 import React from 'react';
 import Navbar from './component/Navbar/Navbar';
 import Sidebar from './component/sidebar/Sidebar';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Add from './pages/Add/Add';
 import List from './pages/List/List';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Orders from './pages/Orders/orders';
+import Login from './components/Login/Login';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function App() {
-  //const url = 'https://api.tlofoodchain.com';
+  const location = useLocation();
   const url = 'http://localhost:8003';
+  
+  const isLoginPage = location.pathname === '/';
+
   return (
     <>
       <div>
         <ToastContainer />
-        <Navbar />
-        <hr />
+        {!isLoginPage && (
+          <>
+            <Navbar />
+            <hr />
+          </>
+        )}
         <div className='app-content'>
-          <Sidebar />
+          {!isLoginPage && <Sidebar />}
           <Routes>
-            {/* Add root route redirect */}
-            <Route path='/' element={<Navigate to='/add' replace />} />
-            <Route path='/add' element={<Add url={url} />} />
-            <Route path='/list' element={<List url={url} />} />
-            <Route path='/orders' element={<Orders url={url} />} />
-            {/* Add catch-all route for unmatched paths */}
+            <Route path='/' element={<Login />} />
+            <Route path='/add' element={
+              <ProtectedRoute>
+                <Add url={url} />
+              </ProtectedRoute>
+            } />
+            <Route path='/list' element={
+              <ProtectedRoute>
+                <List url={url} />
+              </ProtectedRoute>
+            } />
+            <Route path='/orders' element={
+              <ProtectedRoute>
+                <Orders url={url} />
+              </ProtectedRoute>
+            } />
             <Route path='*' element={<Navigate to='/add' replace />} />
           </Routes>
         </div>
