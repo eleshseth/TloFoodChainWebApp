@@ -20,6 +20,12 @@
   justify-content: center;
 }
 
+.out-of-stock {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .food-display-list {
     grid-template-columns: repeat(3, minmax(0, 1fr));

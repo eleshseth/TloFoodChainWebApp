@@ -75,6 +75,26 @@ const Orders = ({ url }) => {
     fetchAllIOrder();
   }, []);
 
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm('Are you sure you want to delete this order?')) {
+      try {
+        const response = await axios.post(`${url}/api/order/delete-order`, {
+          orderId: orderId
+        });
+        
+        if (response.data.success) {
+          toast.success('Order deleted successfully');
+          fetchAllIOrder(); // Refresh the orders list
+        } else {
+          toast.error('Failed to delete order');
+        }
+      } catch (error) {
+        console.error('Error deleting order:', error);
+        toast.error('Error deleting order');
+      }
+    }
+  };
+
   return (
     <div className='order-add'>
       <h3>Order Page</h3>
@@ -135,12 +155,17 @@ const Orders = ({ url }) => {
                     <option value='Store 2'>Store 2</option>
                     <option value='Store 3'>Store 3</option>
                   </select>
+                  {/* Add delete button */}
+                  <button
+                    className='delete-btn'
+                    onClick={() => handleDeleteOrder(order.orderId)}>
+                    Delete Order
+                  </button>
                   <button
                     className='booking-btn wefast'
                     onClick={handleWeFastBooking}>
                     Book We Fast
                   </button>
-
                   <button
                     className='booking-btn porter'
                     onClick={handlePorterBooking}>

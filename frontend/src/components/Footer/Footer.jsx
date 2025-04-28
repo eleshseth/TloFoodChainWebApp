@@ -51,11 +51,14 @@ const Footer = () => {
           <ul>
             <li>
               <img src={assets.location} alt='Address' />
-              <span>123 Food Street, Delhi, India</span>
+              <span>
+                Pioneer Complex, 12/26, Plot Alpha, Sahibabad Industrial Area
+                Site 4, Sahibabad, Ghaziabad, Uttar Pradesh 201010
+              </span>
             </li>
             <li>
               <img src={assets.mobile} alt='Phone' />
-              <span>+91 8130855711</span>
+              <span>+91 98765 43210</span>
             </li>
             <li>
               <img src={assets.email} alt='Email' />
@@ -74,17 +77,26 @@ const Footer = () => {
         <div className='footer-section policies'>
           <h3>Policies</h3>
           <ul>
-            <li><Link to='/terms'>Terms & Conditions</Link></li>
-            <li><Link to='/privacy-policy'>Privacy Policy</Link></li>
-            <li><Link to='/shipping-policy'>Shipping Policy</Link></li>
-            <li><Link to='/cancellation-refunds'>Cancellation & Refunds</Link></li>
+            <li>
+              <Link to='/terms'>Terms & Conditions</Link>
+            </li>
+            <li>
+              <Link to='/privacy-policy'>Privacy Policy</Link>
+            </li>
+            <li>
+              <Link to='/shipping-policy'>Shipping Policy</Link>
+            </li>
+            <li>
+              <Link to='/cancellation'>Refund & Cancellation Policy</Link>
+            </li>
           </ul>
         </div>
       </div>
 
       <div className='footer-bottom'>
         <p>
-          &copy; {new Date().getFullYear()} TLO Food Chain. All rights reserved.
+          &copy; {new Date().getFullYear()} TLO Food Chain. All rights reserved
+          <b> @Powered by MarketMinds Digital Solutions</b>
         </p>
         <div className='footer-bottom-links'>
           <Link to='/privacy-policy'>Privacy Policy</Link>

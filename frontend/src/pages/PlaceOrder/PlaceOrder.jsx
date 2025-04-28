@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const PlaceOrder = () => {
-  const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems } = useContext(StoreContext);
+  const { getTotalCartAmount, token, food_list, cartItems, url, setCartItems } =
+    useContext(StoreContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const PlaceOrder = () => {
 
         // Initialize Razorpay payment
         const options = {
-          key: 'rzp_test_Az6MubxWnMQo9o', // Update this to use environment variable
+          key: 'rzp_live_5iWccL6sPbG4Id', // Update this to use environment variable
           amount: order.amount,
           currency: 'INR',
           name: 'Food Store',
@@ -161,7 +162,7 @@ const PlaceOrder = () => {
         `${url}/api/order/place-cod`,
         orderData,
         {
-          headers: { token: localStorage.getItem('token') }
+          headers: { token: localStorage.getItem('token') },
         }
       );
 
@@ -283,7 +284,7 @@ const PlaceOrder = () => {
             <p>₹{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 50}</p>
           </div>
           <hr />
-           <button type='submit'>PROCEED TO PAYMENT</button> 
+          <button type='submit'>PROCEED TO PAYMENT</button>
           <button onClick={handleCodOrder}>PROCEED VIA COD</button>
         </div>
       </div>

@@ -29,7 +29,10 @@ const Contact = () => {
             <img src={assets.location} alt='location' />
             <div>
               <h3>Address</h3>
-              <p>123 Food Street, Delhi, India</p>
+              <p>
+                Pioneer Complex, 12/26, Plot Alpha, Sahibabad Industrial Area
+                Site 4, Sahibabad, Ghaziabad, Uttar Pradesh 201010
+              </p>
             </div>
           </div>
 

@@ -9,6 +9,8 @@ const Add = ({ url }) => {
   const [category, setCategory] = useState('');
   const [image, setImage] = useState(null);
   const [unit, setUnit] = useState('/pc');
+  const [description, setDescription] = useState('');
+  const [stock, setStock] = useState(0); // Add stock state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +19,8 @@ const Add = ({ url }) => {
     formData.append('price', price);
     formData.append('category', category);
     formData.append('image', image);
+    formData.append('description', description);
+    formData.append('stock', stock); // Add stock to form data
 
     try {
       const response = await axios.post(`${url}/api/food/add`, formData);
@@ -27,6 +31,8 @@ const Add = ({ url }) => {
         setCategory('');
         setImage(null);
         setUnit('');
+        setDescription('');
+        setStock(0); // Reset stock
       } else {
         toast.error('Failed to add food item');
       }
@@ -51,6 +57,17 @@ const Add = ({ url }) => {
         </div>
 
         <div className='form-group'>
+          <label>Description:</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            placeholder='Enter food item description'
+            rows='3'
+          />
+        </div>
+
+        <div className='form-group'>
           <label>Price:</label>
           <input
             type='number'
@@ -67,8 +84,9 @@ const Add = ({ url }) => {
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
             required>
-            <option value='/pc'>/pc</option>
-            <option value='/kg'>/kg</option>
+            <option value='/pc'>/Pcs</option>
+            <option value='/kg'>/Kg</option>
+            <option value='/ltr'>/Ltr</option>
           </select>
         </div>
 
@@ -86,6 +104,17 @@ const Add = ({ url }) => {
             <option value='Chineese'>Chineese</option>
             <option value='Popcorn'>Popcorn</option>
           </select>
+        </div>
+
+        <div className='form-group'>
+          <label>Stock:</label>
+          <input
+            type='number'
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            min="0"
+            required
+          />
         </div>
 
         <div className='form-group'>

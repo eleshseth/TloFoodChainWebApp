@@ -1,9 +1,8 @@
 import cloudinary from '../config/cloudinary.js';
-import foodModel from '../models/foodModel.js';
+import foodModel from '../models/foodmodel.js';
 
 const addFood = async (req, res) => {
   try {
-    // Upload image to Cloudinary with optimized settings
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: 'first-time-use',
       transformation: [
@@ -19,6 +18,7 @@ const addFood = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       category: req.body.category,
+      stock: req.body.stock, // Add stock field
       image: result.secure_url,
       cloudinary_id: result.public_id
     });
@@ -27,11 +27,36 @@ const addFood = async (req, res) => {
     res.json({ 
       success: true, 
       message: 'food added',
-      data: savedFood // Return the saved food data including image URL
+      data: savedFood
     });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: 'error' });
+  }
+};
+
+const updateFood = async (req, res) => {
+  try {
+    const { id, name, price, category, description, stock } = req.body; // Add stock to destructuring
+    
+    const updatedFood = await foodModel.findByIdAndUpdate(
+      id,
+      { name, price, category, description, stock }, // Add stock to update
+      { new: true }
+    );
+
+    if (!updatedFood) {
+      return res.json({ success: false, message: 'Food item not found' });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Food item updated successfully',
+      data: updatedFood 
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: 'Error updating food item' });
   }
 };
 
@@ -62,4 +87,29 @@ const removeFood = async (req, res) => {
   }
 };
 
-export { addFood, listFood, removeFood };
+// const updateFood = async (req, res) => {
+//   try {
+//     const { id, name, price, category, description } = req.body;
+    
+//     const updatedFood = await foodModel.findByIdAndUpdate(
+//       id,
+//       { name, price, category, description },
+//       { new: true }
+//     );
+
+//     if (!updatedFood) {
+//       return res.json({ success: false, message: 'Food item not found' });
+//     }
+
+//     res.json({ 
+//       success: true, 
+//       message: 'Food item updated successfully',
+//       data: updatedFood 
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.json({ success: false, message: 'Error updating food item' });
+//   }
+// };
+
+export { addFood, listFood, removeFood, updateFood };

@@ -1,5 +1,6 @@
 import orderModel from '../models/orderModel.js';
 import userModel from '../models/userModel.js';
+import foodModel from '../models/foodModel.js';  // Add this import
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { error } from 'console';
@@ -26,7 +27,24 @@ const verify = async (req, res) => {
         .json({ success: false, message: 'Payment verification failed!' });
     }
 
-    const order = await orderModel.findOneAndUpdate(
+    // Find the order
+    const order = await orderModel.findOne({ orderId: razorpay_order_id });
+    
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Order not found!' });
+    }
+
+    // Update stock for each item in the order
+    for (const item of order.items) {
+      const food = await foodModel.findById(item._id);
+      if (food) {
+        const newStock = Math.max(0, food.stock - item.quantity);
+        await foodModel.findByIdAndUpdate(item._id, { stock: newStock });
+      }
+    }
+
+    // Update order status
+    const updatedOrder = await orderModel.findOneAndUpdate(
       { orderId: razorpay_order_id },
       {
         paymentId: razorpay_payment_id,
@@ -36,20 +54,53 @@ const verify = async (req, res) => {
       { new: true }
     );
 
-    if (!order) {
-      return res
-        .status(404)
-        .json({ success: false, message: 'Order not found!' });
-    }
-
     res.status(200).json({
       success: true,
       message: 'Payment verified successfully!',
-      order,
+      order: updatedOrder,
     });
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({ success: false, message: 'Internal server error!' });
+  }
+};
+
+const placeCodOrder = async (req, res) => {
+  try {
+    const { userId, items, amount, address } = req.body;
+
+    // Update stock for each item before creating the order
+    for (const item of items) {
+      const food = await foodModel.findById(item._id);
+      if (food) {
+        const newStock = Math.max(0, food.stock - item.quantity);
+        await foodModel.findByIdAndUpdate(item._id, { stock: newStock });
+      }
+    }
+
+    const newOrder = new orderModel({
+      userId,
+      items,
+      amount,
+      address,
+      orderId: 'COD-' + Date.now(),
+      status: 'Food Processing',
+      payment: false,
+    });
+
+    await newOrder.save();
+    await userModel.findByIdAndUpdate(userId, { cartData: {} });
+
+    res.json({
+      success: true,
+      message: 'Order placed successfully',
+    });
+  } catch (error) {
+    console.error('Error placing COD order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error while placing order',
+    });
   }
 };
 
@@ -188,36 +239,6 @@ const updateStoreStatus = async (req, res) => {
   }
 };
 
-const placeCodOrder = async (req, res) => {
-  try {
-    const { userId, items, amount, address } = req.body;
-
-    const newOrder = new orderModel({
-      userId,
-      items,
-      amount,
-      address,
-      orderId: 'COD-' + Date.now(),
-      status: 'Food Processing', // Set default status
-      payment: false,
-    });
-
-    await newOrder.save();
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
-
-    res.json({
-      success: true,
-      message: 'Order placed successfully',
-    });
-  } catch (error) {
-    console.error('Error placing COD order:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error while placing order',
-    });
-  }
-};
-
 // const updateOrderStatus = async (req, res) => {
 //   try {
 //     const { orderId, status } = req.body;
@@ -257,4 +278,30 @@ export {
   updateOrderStatus,
   placeCodOrder,
   updateStoreStatus,
+  deleteOrder,
+};
+
+const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    const order = await orderModel.findOneAndDelete({ orderId: orderId });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Order deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting order',
+    });
+  }
 };

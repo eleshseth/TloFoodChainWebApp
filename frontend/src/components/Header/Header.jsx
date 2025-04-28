@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <div className='header'>
       <div className='header-contents'>
-        <h2>Order your Favourite Food here</h2>
+        <h2>Order Your Favourite Food Here</h2>
         <p>
           Craving something tasty? Order your favorite food from top restaurants
           —fresh, fast, and delivered right to your door. Satisfaction

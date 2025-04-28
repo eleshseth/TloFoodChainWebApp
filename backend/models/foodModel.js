@@ -6,8 +6,9 @@ const foodSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     image: { type: String, required: true },
-    cloudinary_id: { type: String, required: true }, // Add this field
+    cloudinary_id: { type: String, required: true },
     category: { type: String, required: true },
+    stock: { type: Number, required: true, default: 0 } // Added stock field
   },
   { timestamps: true }
 );
