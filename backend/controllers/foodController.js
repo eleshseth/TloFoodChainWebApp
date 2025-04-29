@@ -1,5 +1,5 @@
 import cloudinary from '../config/cloudinary.js';
-import foodModel from '../models/foodmodel.js';
+import foodModel from '../models/foodModel.js';
 
 const addFood = async (req, res) => {
   try {
